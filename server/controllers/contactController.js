@@ -1,4 +1,4 @@
-const Contact = require('../models/Contact');  // Assuming you have a Contact model
+const Contact = require('../models/Contact'); 
 
 // Create new contact
 const createContact = async (req, res) => {
@@ -25,25 +25,18 @@ const createContact = async (req, res) => {
 
 // Update an existing contact
 const updateContact = async (req, res) => {
-  const { id } = req.params;
-  const { firstName, lastName, email, phoneNumber, company, jobTitle } = req.body;
-
   try {
-    // Find the contact by ID and update
-    const updatedContact = await Contact.findByIdAndUpdate(
-      id,
-      { firstName, lastName, email, phoneNumber, company, jobTitle },
-      { new: true }
-    );
+    const contact = await Contact.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
 
-    if (!updatedContact) {
+    if (!contact) {
       return res.status(404).json({ message: 'Contact not found.' });
     }
 
-    res.status(200).json({ message: 'Contact updated successfully!', contact: updatedContact });
+    res.status(200).json({ message: 'Contact updated successfully!', contact });
   } catch (error) {
-    console.error('Error updating contact:', error);
-    res.status(500).json({ message: 'Error updating contact.' });
+    res.status(500).json({ message: 'Error updating contact.', error: error.message });
   }
 };
 
